@@ -5,6 +5,7 @@
 Vagrant.configure('2') do |config|
   config.vm.box = 'precise32'
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+  config.ssh.private_key_path = ENV['SSH_KEY_PATH']
 
   # config.vm.forward_port 80, 8000
   # config.vm.forward_port 8080, 8001
@@ -15,6 +16,14 @@ Vagrant.configure('2') do |config|
     chef.add_recipe 'graphite'
     chef.add_recipe 'nodejs'
     chef.add_recipe 'statsd'
+
+    chef.json = {
+      :nodejs => {
+        :version => '0.10.10',
+        :npm => '1.2.25'
+      }
+    }
+
   end
 
   config.vm.synced_folder '.', '/vagrant'
@@ -25,7 +34,5 @@ Vagrant.configure('2') do |config|
     provider.api_key = ENV['DO_API_KEY']
     provider.region = 'Amsterdam 1'
     provider.image = 'Ubuntu 12.04 x32 Server'
-    
-    config.ssh.private_key_path = '~/.ssh/digital-ocean'
   end
 end
