@@ -7,12 +7,13 @@ Vagrant.configure('2') do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
   config.ssh.private_key_path = ENV['SSH_KEY_PATH']
 
-  # config.vm.forward_port 80, 8000
-  # config.vm.forward_port 8080, 8001
-  # config.vm.forward_port 8125, 8125, :protocol => 'udp'
+  config.vm.network :forwarded_port, guest: 80, host: 8000
+  config.vm.network :forwarded_port, guest: 8080, host: 8001
+  config.vm.network :forwarded_port, guest: 8125, host: 8125, :protocol => 'udp'
 
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe 'apt'
+    chef.add_recipe 'vim'
     chef.add_recipe 'graphite'
     chef.add_recipe 'nodejs'
     chef.add_recipe 'statsd'
